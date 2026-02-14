@@ -1,0 +1,29 @@
+{
+    "name": "pibot",
+    "version": "1.0.0",
+    "description": "API bot for QQ boosted with llm AI",
+    "main": "dist/main.js",
+    "author": "bcmray",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "lint": "prettier --write .",
+        "build": "tsc",
+        "test": "tsx src/main.ts",
+        "start": "node dist/main.js"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.26.0",
+        "express": "^5.2.1",
+        "node-napcat-ts": "^0.4.21",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.2.3",
+        "dotenv": "^17.3.1",
+        "prettier": "^3.8.1",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    }
+}
