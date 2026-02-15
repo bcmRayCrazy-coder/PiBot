@@ -17,7 +17,7 @@
 它们两运行于两个完全分离的环境中, 除非通过`RemoteChannel`, 否则无法互通  
 若要获得某API的具体内容, 需在`query`指明API
 
-返回内容为使用`JSON.stringify`格式化的JSON, 请自行解析, 格式如下:  
+返回内容为使用`JSON.stringify`格式化的JSON, 请自行解析, 格式如下:
 
 ```typescript
 {
@@ -42,10 +42,6 @@
 {
     // 思考过程
     thinking: string,
-    // 分析问题
-    analyze: string,
-    // 回答
-    answer: string,
     // 合适的 api
     api: string[]
 }

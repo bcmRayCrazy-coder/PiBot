@@ -13,7 +13,6 @@ export function initMCP(app: Express) {
     });
 
     registerFetchApiTool(server);
-    // registerApiResource(server);
     // registerFetchContentTool(server);
 
     const sessions: Map<string | string[], StreamableHTTPServerTransport> =
