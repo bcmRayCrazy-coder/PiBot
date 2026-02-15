@@ -1,0 +1,3 @@
+[submodule "submodules/arena_dts"]
+	path = submodules/arena_dts
+	url = https://gitee.com/box3lab/arena_dts.git

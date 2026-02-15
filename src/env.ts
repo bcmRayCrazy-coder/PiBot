@@ -1,4 +1,5 @@
-import { createReadStream } from "fs";
+import yaml from "js-yaml";
+import { readFile } from "fs/promises";
 
 export interface EnvWebConfig {
     port: number;
@@ -18,14 +19,21 @@ class Env {
         port: 2200,
     };
     napcat: EnvNapcatConfig = {
-        host: process.env.NC_HOST || "127.0.0.1",
-        port: parseInt(process.env.NC_PORT || "6020"),
-        token: process.env.NC_TOKEN || "",
-        protocol: (process.env.NC_PROTOCOL as "ws" | "wss") || "ws",
+        host: "127.0.0.1",
+        port: 6020,
+        token: "",
+        protocol: "ws",
     };
     bot: EnvBotConfig = {
-        admin: parseInt(process.env.BOT_ADMIN || "0"),
+        admin: 0,
     };
+
+    async loadFromConfig(configPath: string) {
+        const rawConig = await readFile(configPath);
+        const config = yaml.load(rawConig.toString("utf-8"));
+        // console.log(config);
+        Object.assign(this, config);
+    }
 }
 
 export let env = new Env();

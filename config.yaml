@@ -1,0 +1,16 @@
+# Webpage (with mcp) config
+web:
+    port: 2200
+
+# Napcat config
+napcat:
+    host: 127.0.0.1
+    port: 6020
+    token: 123456
+    # Use "ws" or "wss"
+    protocol: ws
+
+# Bot config
+bot:
+    # Admin QQ id
+    admin: 0

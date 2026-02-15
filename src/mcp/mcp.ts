@@ -15,7 +15,8 @@ export function initMCP(app: Express) {
     registerApiResource(server);
     registerFetchContentTool(server);
 
-    const sessions: Map<string | string[], StreamableHTTPServerTransport> = new Map();
+    const sessions: Map<string | string[], StreamableHTTPServerTransport> =
+        new Map();
 
     app.post("/mcp", async (req, res) => {
         const sessionId = req.headers["mcp-session-id"];
@@ -44,9 +45,7 @@ export function initMCP(app: Express) {
                     // @ts-ignore
                     .connect(transport)
                     .then(() => {
-                        console.log(
-                            "Create MCP Session", sessionId
-                        );
+                        console.log("Create MCP Session", sessionId);
                     })
                     .catch(console.error);
                 sessions.set(sessionId, transport);
@@ -59,11 +58,11 @@ export function initMCP(app: Express) {
         await transport.handleRequest(req, res, req.body);
     });
 
-    app.delete('/mcp', async (req, res) => {
-        const sessionId = req.headers['mcp-session-id'];
+    app.delete("/mcp", async (req, res) => {
+        const sessionId = req.headers["mcp-session-id"];
         if (!sessionId) return res.status(400);
         const transport = sessions.get(sessionId);
         if (!transport) return res.status(400);
         transport.close();
-    })
+    });
 }
