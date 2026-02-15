@@ -14,12 +14,7 @@ export function loadDeclaration(sourceFilePath: string): DeclarationContent[] {
                 type: "class",
                 name: declaration.getName() || "<Unknown>",
                 docs: parseJsDocs(declaration.getJsDocs()),
-                members: declaration.getMembers().map(member => {
-                    return {
-                        define: member.getText(),
-                        docs: parseJsDocs(member.getJsDocs())
-                    }
-                })
+                members: declaration.getProperties().map(property => property.getName())
             }
         })
     const enums: DeclarationContent[] = sourceFile.getEnums().map(declaration => {
@@ -55,5 +50,19 @@ export function loadDeclaration(sourceFilePath: string): DeclarationContent[] {
             members: []
         }
     })
-    return classes.concat(enums, functions, variables);
+
+    const classes_full: DeclarationContent[] = sourceFile.getClasses().map(declaration => {
+        return {
+            type: "class_full",
+            name: declaration.getName() || "<Unknown>",
+            docs: parseJsDocs(declaration.getJsDocs()),
+            members: declaration.getMembers().map(member => {
+                return {
+                    define: member.getText(),
+                    docs: parseJsDocs(member.getJsDocs())
+                }
+            })
+        }
+    })
+    return classes.concat(enums, functions, variables, classes_full);
 }

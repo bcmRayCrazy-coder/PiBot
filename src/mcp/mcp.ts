@@ -3,7 +3,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import type { Express } from "express";
 import { randomUUID } from "crypto";
 import { registerFetchContentTool } from "./tool/fetchContent.js";
-import { registerApiResource } from "./resource/api.js";
+import { registerFetchApiTool } from "./tool/fetchApi.js";
 
 export function initMCP(app: Express) {
     console.log("Init MCP");
@@ -12,8 +12,9 @@ export function initMCP(app: Express) {
         version: "1.0.0",
     });
 
-    registerApiResource(server);
-    registerFetchContentTool(server);
+    registerFetchApiTool(server);
+    // registerApiResource(server);
+    // registerFetchContentTool(server);
 
     const sessions: Map<string | string[], StreamableHTTPServerTransport> =
         new Map();

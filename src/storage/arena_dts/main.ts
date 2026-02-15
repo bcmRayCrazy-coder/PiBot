@@ -42,13 +42,13 @@ const rootList = [
 ]
 
 export class AreanaDtsStorage implements Storage {
-    name = "api";
-    uriTemplate = "api://{query}";
-    config: ResourceMetadata = {
-        title: "可用的api列表",
-        description: "获取所有可用的api列表, 并仅向用户呈现出现在列表内的api",
-        mimeType: "application/json",
-    };
+    // name = "api";
+    // uriTemplate = "api://{query}";
+    // config: ResourceMetadata = {
+    //     title: "可用的api列表",
+    //     description: "获取所有可用的api列表, 并仅向用户呈现出现在列表内的api",
+    //     mimeType: "application/json",
+    // };
 
     clientDeclaration: DeclarationContent[] = []
     serverDeclaration: DeclarationContent[] = []
@@ -58,46 +58,57 @@ export class AreanaDtsStorage implements Storage {
         this.serverDeclaration = loadDeclaration('submodules/arena_dts/GameAPI.d.ts');
     }
 
-    async handleList(): Promise<ListResourcesResult> {
-        return {
-            resources: contentToList(rootList)
-        };
-    }
-    async handleResource(
-        uri: URL,
-        param: { query: string },
-    ): Promise<ReadResourceResult> {
-        const query = param.query.split('%2F');
+    // async handleList(): Promise<ListResourcesResult> {
+    //     return {
+    //         resources: contentToList(rootList)
+    //     };
+    // }
+    // async handleResource(
+    //     uri: URL,
+    //     param: { query: string },
+    // ): Promise<ReadResourceResult> {
+    //     const query = param.query.split('%2F');
+    //     console.log(query);
+    //     if (query[0] === 'client') {
+    //         return {
+    //             contents: contentToRead(this.queryApi(query, this.clientDeclaration))
+    //         }
+    //     }
+    //     else if (query[0] === 'server') {
+    //         return {
+    //             contents: contentToRead(this.queryApi(query, this.clientDeclaration))
+    //         }
+    //     }
+    //     return {
+    //         contents: [
+    //             {
+    //                 uri: uri.href,
+    //                 text: "⚠️ 错误: 该资源不存在, 请使用其它资源(如下)"
+    //             },
+    //             ...contentToRead(rootList)
+    //         ],
+    //     };
+    // }
+
+    async query(query: string[]): Promise<string> {
         console.log(query);
         if (query[0] === 'client') {
-            return {
-                contents: contentToRead(this.queryApi(query, this.clientDeclaration))
-            }
+            return JSON.stringify(this.queryApi(query, this.clientDeclaration))
         }
         else if (query[0] === 'server') {
-            return {
-                contents: contentToRead(this.queryApi(query, this.clientDeclaration))
-            }
+            return JSON.stringify(this.queryApi(query, this.serverDeclaration))
         }
-        return {
-            contents: [
-                {
-                    uri: uri.href,
-                    text: "⚠️ 错误: 该资源不存在, 请使用其它资源(如下)"
-                },
-                ...contentToRead(rootList)
-            ],
-        };
+        return "⚠️ 错误: 该api不存在, 请查询其他api"
     }
 
     queryApi(query: string[], declaration: DeclarationContent[]): ResourceContent[] {
-        if (query.length === 1) return declaration.map(d => {
+        if (query.length === 1) return declaration.filter(d => d.type != 'class_full').map(d => {
             return {
                 uri: `api://${query[0]}/${d.name}`,
                 content: JSON.stringify(d)
             }
         })
-        const topDeclaration = declaration.filter(d => d.name === query[1]);
+        const topDeclaration = declaration.filter(d => d.name === query[1] && d.type != 'class');
         if (query.length === 2) return topDeclaration.map(d => {
             return {
                 uri: `api://${query.join('/')}`,
@@ -105,8 +116,8 @@ export class AreanaDtsStorage implements Storage {
             }
         })
         return [{
-            uri:`api://${query.join('/')}`,
-            content:'⚠️ 错误: 不存在此API, 请使用其它API'
+            uri: `api://${query.join('/')}`,
+            content: '⚠️ 错误: 该api不存在, 请查询其他api'
         }]
     }
 }

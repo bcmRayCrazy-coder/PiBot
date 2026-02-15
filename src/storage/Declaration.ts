@@ -3,8 +3,8 @@ export interface DeclarationContentMember {
     docs: string[]
 }
 export interface DeclarationContent {
-    type: 'class' | 'enum' | 'function'|'variable',
+    type: 'class' | 'enum' | 'function' | 'variable' | 'class_full',
     name: string,
     docs: string[],
-    members: DeclarationContentMember[]
+    members: DeclarationContentMember[] | string[]
 }
