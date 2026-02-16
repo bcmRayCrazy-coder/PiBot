@@ -1,41 +1,44 @@
 import yaml from "js-yaml";
 import { readFile } from "fs/promises";
 
-export interface EnvAIConfig {
+export interface AIConfig {
     baseUrl: string;
     apiKey: string;
     model: string;
 }
-export interface EnvWebConfig {
+export interface WebConfig {
     port: number;
 }
-export interface EnvNapcatConfig {
+export interface NapcatConfig {
     host: string;
     port: number;
     token: string;
     protocol: "ws" | "wss";
 }
-export interface EnvBotConfig {
+export interface BotConfig {
     admin: number;
+    messageSendInterval: number;
 }
-class Env {
+
+class Config {
     envType: string = process.env.ENV_TYPE || "";
-    ai: EnvAIConfig = {
+    ai: AIConfig = {
         baseUrl: "",
         apiKey: "",
         model: "",
     };
-    web: EnvWebConfig = {
+    web: WebConfig = {
         port: 2200,
     };
-    napcat: EnvNapcatConfig = {
+    napcat: NapcatConfig = {
         host: "127.0.0.1",
         port: 6020,
         token: "",
         protocol: "ws",
     };
-    bot: EnvBotConfig = {
+    bot: BotConfig = {
         admin: 0,
+        messageSendInterval: 0
     };
 
     async loadFromConfig(configPath: string) {
@@ -46,4 +49,4 @@ class Env {
     }
 }
 
-export let env = new Env();
+export let config = new Config();

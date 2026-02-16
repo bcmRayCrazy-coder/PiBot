@@ -1,16 +1,16 @@
 import { readFile } from "node:fs/promises";
-import { initAI } from "./ai/ai.js";
-import { env } from "./env.js";
-import { initMCP } from "./mcp/mcp.js";
+import { initAI } from "./ai/init.js";
+import { config } from "./config.js";
+import { initMCP } from "./mcp/init.js";
 import { initWeb } from "./web/web.js";
 
 async function main() {
     console.log("Start PiBot");
-    await env.loadFromConfig(
-        `config${env.envType === "TEST" ? ".test" : ""}.yaml`,
+    await config.loadFromConfig(
+        `config${config.envType === "TEST" ? ".test" : ""}.yaml`,
     );
     const ai = initAI();
-    const webApp = initWeb();
+    // const webApp = initWeb();
     const mcp = initMCP();
     // await ai.check();
     ai.addMcp(mcp);

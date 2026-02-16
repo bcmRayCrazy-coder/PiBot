@@ -1,18 +1,12 @@
 import { OpenAI } from "openai/client.js";
-import { env } from "../env.js";
-import type { MyMcp } from "../mcp/mcp.js";
+import { config } from "../config.js";
+import type { MyMcp } from "../mcp/MyMcp.js";
 import type {
     ChatCompletionCreateParamsNonStreaming,
     ChatCompletionMessageParam,
     ChatCompletionTool,
 } from "openai/resources.js";
 import z from "zod";
-
-export function initAI() {
-    const ai = new AI(env.ai.baseUrl, env.ai.apiKey);
-    ai.model = env.ai.model;
-    return ai;
-}
 
 export type AIChatResult = {
     error?: string;
@@ -36,7 +30,7 @@ const ResultValidation = z.object({
     api: z.array(z.string())
 })
 
-export class AI {
+export class MyAI {
     model: string = "";
     openAI: OpenAI;
     mcpInstances: MyMcp[] = [];

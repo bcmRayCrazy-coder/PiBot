@@ -1,4 +1,4 @@
-import type { Storage } from "../storage.js";
+import type { Storage } from "../Storage.js";
 import { loadDeclaration } from "./loader.js";
 import type { DeclarationContent } from "../Declaration.js";
 
