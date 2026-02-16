@@ -36,13 +36,13 @@
 
 # 输出格式
 
-你的输出应为`json`且格式如下:
+你的输出应为`json`, 请不要使用Markdown且格式如下:
 
 ```typescript
 {
-    // 思考过程
+    // 思考过程, 纯文本, 请不要使用Markdown
     thinking: string,
-    // 合适的 api
+    // 合适的 api, 格式为 {class/var/...}.{property}
     api: string[]
 }
 ```

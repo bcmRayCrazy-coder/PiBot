@@ -1,6 +1,11 @@
 import yaml from "js-yaml";
 import { readFile } from "fs/promises";
 
+export interface EnvAIConfig {
+    baseUrl: string;
+    apiKey: string;
+    model: string;
+}
 export interface EnvWebConfig {
     port: number;
 }
@@ -15,6 +20,11 @@ export interface EnvBotConfig {
 }
 class Env {
     envType: string = process.env.ENV_TYPE || "";
+    ai: EnvAIConfig = {
+        baseUrl: "",
+        apiKey: "",
+        model: "",
+    };
     web: EnvWebConfig = {
         port: 2200,
     };
