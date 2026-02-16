@@ -1,4 +1,4 @@
-import type { Storage } from "../Storage.js";
+import type { Provider } from "../Provider.js";
 import { loadDeclaration } from "./loader.js";
 import type { DeclarationContent } from "../Declaration.js";
 
@@ -19,7 +19,7 @@ api推荐:
     ];
 }
 
-export class AreanaDtsStorage implements Storage {
+export class AreanaDtsProvider implements Provider {
     clientDeclaration: DeclarationContent[] = [];
     serverDeclaration: DeclarationContent[] = [];
 
