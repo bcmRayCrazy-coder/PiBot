@@ -1,5 +1,4 @@
 import { OpenAI } from "openai/client.js";
-import { config } from "../config.js";
 import type { MyMcp } from "../mcp/MyMcp.js";
 import type {
     ChatCompletionCreateParamsNonStreaming,
@@ -8,28 +7,30 @@ import type {
 } from "openai/resources.js";
 import z from "zod";
 
-export type AIChatResult = {
-    error: string;
-} | {
-    error: null;
-    thinking: string;
-    api: string[];
-    duration: number;
+export type AIChatResult =
+    | {
+          error: string;
+      }
+    | {
+          error: null;
+          thinking: string;
+          api: string[];
+          duration: number;
+          token: number;
+          callTimes: number;
+      };
+
+interface CompletionResult {
+    messages: ChatCompletionMessageParam[];
+    finished: boolean;
     token: number;
     callTimes: number;
 }
 
-interface CompletionResult {
-    messages: ChatCompletionMessageParam[],
-    finished: boolean,
-    token: number,
-    callTimes: number
-}
-
 const ResultValidation = z.object({
     thinking: z.string(),
-    api: z.array(z.string())
-})
+    api: z.array(z.string()),
+});
 
 export class MyAI {
     model: string = "";
@@ -55,13 +56,14 @@ export class MyAI {
         return tools;
     }
 
-    private async chatCompletion(params: ChatCompletionCreateParamsNonStreaming): Promise<CompletionResult> {
+    private async chatCompletion(
+        params: ChatCompletionCreateParamsNonStreaming,
+    ): Promise<CompletionResult> {
         var finished = true;
         var token = 0;
         var callTimes = 0;
         const msgList: ChatCompletionMessageParam[] = [];
-        const completion =
-            await this.openAI.chat.completions.create(params);
+        const completion = await this.openAI.chat.completions.create(params);
 
         if (completion.usage) token += completion.usage.total_tokens;
 
@@ -72,16 +74,26 @@ export class MyAI {
                 finished = false;
                 const toolResults: ChatCompletionMessageParam[] = [];
                 for (const toolCall of msg.tool_calls) {
-                    if (toolCall.type == 'function') {
+                    if (toolCall.type == "function") {
                         const arg = JSON.parse(toolCall.function.arguments);
-                        const it = this.mcpInstances.values()
+                        const it = this.mcpInstances.values();
                         var mcp = it.next();
                         while (!mcp.done) {
-                            if (await mcp.value.hasTool(toolCall.function.name)) {
+                            if (
+                                await mcp.value.hasTool(toolCall.function.name)
+                            ) {
                                 toolResults.push({
-                                    role: 'tool',
+                                    role: "tool",
                                     tool_call_id: toolCall.id,
-                                    content: JSON.stringify([{ content: 'text', text: await mcp.value.callTool(toolCall.function.name, arg) }])
+                                    content: JSON.stringify([
+                                        {
+                                            content: "text",
+                                            text: await mcp.value.callTool(
+                                                toolCall.function.name,
+                                                arg,
+                                            ),
+                                        },
+                                    ]),
                                 });
                                 callTimes++;
                                 break;
@@ -90,7 +102,7 @@ export class MyAI {
                         }
                     }
                 }
-                msgList.push(...toolResults)
+                msgList.push(...toolResults);
             }
         }
         return { messages: msgList, finished, callTimes, token };
@@ -113,8 +125,8 @@ export class MyAI {
                 messages,
                 finished: false,
                 callTimes: 0,
-                token: 0
-            }
+                token: 0,
+            };
             while (!result.finished) {
                 params.messages = result.messages;
                 const currentResult = await this.chatCompletion(params);
@@ -124,35 +136,33 @@ export class MyAI {
                 result.token += currentResult.token;
             }
 
-
             // Parse Output
-            var chatResult0 = result.messages[result.messages.length - 1]
-            // console.log(chatResult0);
-            if (!chatResult0 || !chatResult0.content || typeof (chatResult0.content) !== 'string') return {
-                error: "No Result 0"
-            }
-            var chatResult1 = chatResult0.content;
+            var chatResult0 = result.messages[result.messages.length - 1];
+            if (
+                !chatResult0 ||
+                !chatResult0.content ||
+                typeof chatResult0.content !== "string"
+            )
+                return {
+                    error: "Chat No Message",
+                };
 
-            // var chatResult1 = chatResult0.content.match(/```json\n([\s\S]*?)\n```/)
-            // if (!chatResult1 || chatResult1.length === 0) return {
-            //     error: "No Result 1"
-            // }
-            var chatResult2 = chatResult1;
-            if (!chatResult2) return {
-                error: "No Result 2"
-            }
+            if (!chatResult0.content)
+                return {
+                    error: "Chat Message No Content",
+                };
 
-            // console.log(chatResult2);
-
-            const parsedResult = ResultValidation.parse(JSON.parse(chatResult2));
+            const parsedResult = ResultValidation.parse(
+                JSON.parse(chatResult0.content),
+            );
 
             return {
-                error:null,
+                error: null,
                 thinking: parsedResult.thinking,
                 api: parsedResult.api,
                 duration: Date.now() - startTime,
                 token: result.token,
-                callTimes: result.callTimes
+                callTimes: result.callTimes,
             };
         } catch (err) {
             console.error(err);
@@ -171,7 +181,6 @@ export class MyAI {
                     { role: "user", content: "Hi" },
                 ],
             });
-            // console.log(completion.choices[0]?.message);
             return true;
         } catch (err) {
             console.error(err);

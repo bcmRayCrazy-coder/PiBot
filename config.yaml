@@ -3,9 +3,6 @@ ai:
     baseUrl: https://example.com/
     apiKey: your_api_key_here
     model: your_chat_model
-# Webpage (with mcp) config
-web:
-    port: 2200
 
 # Napcat config
 napcat:

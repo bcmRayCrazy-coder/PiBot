@@ -48,16 +48,11 @@ export function loadDeclaration(sourceFilePath: string): DeclarationContent[] {
     const variables: DeclarationContent[] = sourceFile
         .getVariableDeclarations()
         .map((declaration) => {
-            // const statement = declaration.getVariableStatement();
-            // var docs = [];
-            // if (statement) docs.push(...parseJsDocs(statement.getJsDocs()))
-            // else docs.push(declaration.getText())
             return {
                 type: "variable",
                 name: declaration.getName() || "<Unknown>",
                 docs: [declaration.getText()],
                 members: [],
-                // members: [declaration.getText(false)]
             };
         });
 
