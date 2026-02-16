@@ -19,3 +19,8 @@ napcat:
 bot:
     # Admin QQ id
     admin: 0
+    # Send message interval
+    messageSendInterval: 500
+    # Enable PiBot in these group id
+    groups:
+        - 0

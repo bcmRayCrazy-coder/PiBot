@@ -16,6 +16,7 @@
         "@modelcontextprotocol/sdk": "^1.26.0",
         "express": "^5.2.1",
         "js-yaml": "^4.1.1",
+        "minimist": "^1.2.8",
         "node-napcat-ts": "^0.4.21",
         "openai": "^6.22.0",
         "ts-morph": "^27.0.2",
@@ -24,6 +25,7 @@
     "devDependencies": {
         "@types/express": "^5.0.6",
         "@types/js-yaml": "^4.0.9",
+        "@types/minimist": "^1.2.5",
         "@types/node": "^25.2.3",
         "dotenv": "^17.3.1",
         "prettier": "^3.8.1",

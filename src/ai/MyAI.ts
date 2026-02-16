@@ -9,8 +9,9 @@ import type {
 import z from "zod";
 
 export type AIChatResult = {
-    error?: string;
+    error: string;
 } | {
+    error: null;
     thinking: string;
     api: string[];
     duration: number;
@@ -146,6 +147,7 @@ export class MyAI {
             const parsedResult = ResultValidation.parse(JSON.parse(chatResult2));
 
             return {
+                error:null,
                 thinking: parsedResult.thinking,
                 api: parsedResult.api,
                 duration: Date.now() - startTime,

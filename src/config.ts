@@ -1,5 +1,6 @@
 import yaml from "js-yaml";
 import { readFile } from "fs/promises";
+import { number } from "zod";
 
 export interface AIConfig {
     baseUrl: string;
@@ -18,6 +19,7 @@ export interface NapcatConfig {
 export interface BotConfig {
     admin: number;
     messageSendInterval: number;
+    groups: number[]
 }
 
 class Config {
@@ -38,7 +40,8 @@ class Config {
     };
     bot: BotConfig = {
         admin: 0,
-        messageSendInterval: 0
+        messageSendInterval: 0,
+        groups: []
     };
 
     async loadFromConfig(configPath: string) {
