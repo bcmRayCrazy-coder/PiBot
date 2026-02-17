@@ -30,23 +30,27 @@ export class PromptCommand extends Command {
         this.bot.messageSender.sendGroupMsg(groupId, [
             Structs.text("⌛ 查询API中, 请耐心等候(约1min)"),
         ]);
-        const response = await this.ai.chat([
-            { role: "system", content: this.systemPrompt },
-            { role: "user", content: userPrompt },
-        ]);
-        if (response.error) {
-            return this.bot.messageSender.sendGroupMsg(groupId, [
-                Structs.text("❌ API查询失败:\n" + response.error),
+        try {
+            const response = await this.ai.chat([
+                { role: "system", content: this.systemPrompt },
+                { role: "user", content: userPrompt },
             ]);
-        } else if (response.error === null) {
-            return this.bot.messageSender.sendGroupMsg(groupId, [
-                Structs.text(
-                    `📄 查询完成 (${Math.round((response.duration / 1000) * 100) / 100}s ${response.token} tokens)\n` +
+            if (response.error) {
+                return this.bot.messageSender.sendGroupMsg(groupId, [
+                    Structs.text("❌ API查询失败:\n" + response.error),
+                ]);
+            } else if (response.error === null) {
+                return this.bot.messageSender.sendGroupMsg(groupId, [
+                    Structs.text(
+                        `📄 查询完成 (${Math.round((response.duration / 1000) * 100) / 100}s ${response.token} tokens)\n` +
                         response.thinking +
                         "\n======\n" +
                         response.api.join("\n"),
-                ),
-            ]);
+                    ),
+                ]);
+            }
+        } catch (err) {
+            console.error(err);
         }
         this.bot.messageSender.sendGroupMsg(groupId, [
             Structs.text("❌ API查询失败"),

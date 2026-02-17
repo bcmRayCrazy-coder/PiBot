@@ -11,7 +11,7 @@ function fallbackText(query: string[]) {
     return [
         {
             uri: `api://${query.join("/")}`,
-            content: `⚠️ 错误: 该api不存在, 请查询其他api
+            content: `⚠️ 错误: 该api不存在, 请查询其他api, ${(/^[A-Z]/.test(query[1] || "a") && query[0] === 'server') ? `你也可以尝试搜索 Game${query[1]}` : ""}
 api推荐:
 1. 服务端: world(世界), voxels(方块), remoteChannel(与客户端通信), GameEntity(模型,实体,玩家), GamePlayer(玩家)
 2. 客户端: ui(UI界面), remoteChannel(与服务端通信)`,
