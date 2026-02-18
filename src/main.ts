@@ -12,6 +12,7 @@ async function main() {
     initProvider();
     const ai = initAI();
     const mcp = initMCP();
+    console.log("Checking AI...");
     if (!await ai.check()) throw new Error("Unable to use AI");
     ai.addMcp(mcp);
     initBot(ai);
